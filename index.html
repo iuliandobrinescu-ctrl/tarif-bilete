@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<title>Tarif Bilete — Buciumeni · Rm. Vâlcea</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#1a2230">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Tarif Bilete">
+<link rel="manifest" href="manifest.json">
+<link rel="apple-touch-icon" href="icon-192.png">
+<style>
+  :root{
+    --bg:#1a2230;
+    --bg2:#212b3c;
+    --card:#243044;
+    --line:#37455c;
+    --ink:#f0ece2;
+    --ink-dim:#a6b0c3;
+    --amber:#e0a63c;
+    --amber-dim:#8a6a2f;
+    --ok:#7fb37a;
+  }
+  :root:not([data-theme="light"]){}
+  @media (prefers-color-scheme: light){
+    :root:not([data-theme="dark"]){
+      --bg:#f3f0e8; --bg2:#eae5d8; --card:#ffffff; --line:#d9d2c0;
+      --ink:#232323; --ink-dim:#5c5648; --amber:#b8791f; --amber-dim:#d9b56c; --ok:#3c7a37;
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f3f0e8; --bg2:#eae5d8; --card:#ffffff; --line:#d9d2c0;
+    --ink:#232323; --ink-dim:#5c5648; --amber:#b8791f; --amber-dim:#d9b56c; --ok:#3c7a37;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--bg); color:var(--ink);
+    font-family:'Courier New', ui-monospace, Menlo, monospace;
+    min-height:100vh; padding:20px 14px 60px;
+  }
+  .wrap{max-width:480px; margin:0 auto;}
+  header{margin-bottom:18px; text-align:left;}
+  .route{font-size:12px; letter-spacing:.04em; color:var(--ink-dim); font-family:Georgia,serif;}
+  h1{
+    font-family:Georgia, 'Times New Roman', serif; font-weight:700;
+    font-size:26px; margin:4px 0 0; color:var(--ink); line-height:1.15;
+  }
+  .ticket{
+    background:var(--card); border:1px dashed var(--amber-dim);
+    border-radius:6px; padding:20px; position:relative; overflow:hidden;
+  }
+  .ticket::before, .ticket::after{
+    content:""; position:absolute; width:20px; height:20px; background:var(--bg);
+    border-radius:50%; top:50%; transform:translateY(-50%);
+  }
+  .field{margin-bottom:14px;}
+  label{display:block; font-size:11px; color:var(--ink-dim); margin-bottom:6px; font-family:Georgia,serif; font-style:italic;}
+  select{
+    width:100%; padding:12px 10px; font-size:16px; font-family:inherit;
+    background:var(--bg2); color:var(--ink); border:1px solid var(--line); border-radius:4px;
+  }
+  .row2{display:flex; gap:10px;}
+  .row2 .field{flex:1;}
+  .voice-btn{
+    width:100%; margin-top:4px; padding:14px; font-size:15px; font-family:Georgia,serif;
+    background:transparent; color:var(--amber); border:1px solid var(--amber-dim);
+    border-radius:4px; cursor:pointer; display:flex; align-items:center; justify-content:center; gap:8px;
+  }
+  .voice-btn.listening{background:var(--amber); color:var(--bg); border-color:var(--amber);}
+  .voice-btn:disabled{opacity:.4; cursor:default;}
+  .result{
+    margin-top:18px; padding-top:18px; border-top:1px dashed var(--amber-dim);
+    text-align:center; min-height:70px; display:flex; flex-direction:column; justify-content:center;
+  }
+  .price{font-family:Georgia,serif; font-size:44px; color:var(--amber); line-height:1;}
+  .price small{font-size:16px; color:var(--ink-dim);}
+  .result-route{font-size:13px; color:var(--ink-dim); margin-top:6px;}
+  .msg{font-size:14px; color:var(--ink-dim);}
+  .msg.err{color:#c96a5a;}
+  .heard{font-size:12px; color:var(--ink-dim); margin-top:10px; font-style:italic;}
+  details{margin-top:22px;}
+  summary{cursor:pointer; font-size:13px; color:var(--ink-dim); font-family:Georgia,serif;}
+  .warn{
+    margin-top:10px; font-size:12px; color:var(--ink-dim); line-height:1.5;
+    background:var(--bg2); border-left:3px solid var(--amber-dim); padding:10px 12px; border-radius:2px;
+  }
+  table{width:100%; border-collapse:collapse; margin-top:12px; font-size:11px;}
+  th, td{border:1px solid var(--line); padding:0; text-align:center;}
+  th{background:var(--bg2); color:var(--ink-dim); font-weight:normal; padding:5px 3px; position:sticky; top:0;}
+  th.rowhead, td.rowhead{
+    text-align:left; padding:5px 6px; background:var(--bg2); color:var(--ink); position:sticky; left:0; white-space:nowrap;
+  }
+  td input{
+    width:100%; border:none; background:transparent; color:var(--ink); text-align:center;
+    font-family:inherit; font-size:11px; padding:6px 2px;
+  }
+  td input:focus{background:var(--amber); color:var(--bg); outline:none;}
+  .tablewrap{overflow-x:auto; -webkit-overflow-scrolling:touch;}
+  .note{margin-top:14px; font-size:12px; color:var(--ink-dim);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="route">SC AUTO NARCI SRL · valabil din 01.05.2026</div>
+    <h1>Buciumeni — Rm. Vâlcea</h1>
+  </header>
+
+  <div class="ticket">
+    <div class="row2">
+      <div class="field">
+        <label>de la</label>
+        <select id="from"></select>
+      </div>
+      <div class="field">
+        <label>până la</label>
+        <select id="to"></select>
+      </div>
+    </div>
+
+    <button class="voice-btn" id="voiceBtn">🎙 spune stațiile</button>
+    <div class="heard" id="heard"></div>
+
+    <div class="result" id="result">
+      <div class="msg">Alege stațiile sau apasă microfonul</div>
+    </div>
+  </div>
+
+  <details id="installBox" open>
+    <summary>📲 Instalează pe telefon</summary>
+    <div class="warn" id="installMsg">
+      Deschide acest link în <b>Chrome</b> pe telefon, apoi atinge meniul cu trei puncte (⋮) din colțul din dreapta sus și alege <b>„Adaugă pe ecranul de pornire”</b> sau <b>„Instalează aplicația”</b>. Va apărea o iconiță de autobuz pe ecranul principal, care deschide aplicația pe tot ecranul, fără bara de Chrome — exact ca o aplicație obișnuită.
+    </div>
+    <button class="voice-btn" id="installBtn" style="display:none;">📲 Instalează aplicația</button>
+  </details>
+
+  <details>
+    <summary>Verifică / corectează tarifele</summary>
+    <div class="warn">
+      Tarifele au fost citite dintr-o poză a tabelului tinut de firmă — pot exista greșeli de citire, mai ales la rândurile de jos, care par tăiate în poză. Verifică fiecare celulă și corecteaz-o direct aici dacă nu corespunde cu tabelul tipărit. Modificările rămân doar pe acest telefon.
+    </div>
+    <div class="tablewrap">
+      <table id="editTable"></table>
+    </div>
+    <div class="note">Casetele goale sau cu „–” înseamnă că nu se vinde bilet pe combinația respectivă.</div>
+  </details>
+</div>
+
+<script>
+// Rows = every boarding point on the route (top to bottom, direction Buciumeni -> Rm. Vâlcea)
+const ROWS = ["BUCIUMENI","SPIRIDON","DRAGOESTI","TUFANI","CIOBOTI","OLANU","DRAGIOIU","TEIU",
+  "FACULTATIVA","GALICEA","SLAVITESTI","BABENI","TATARANI","MIHAESTI","SPALATORIE PETROL",
+  "GOVORA G.","CCH/CONSERVIL","BADCOM","ROVIMET","RM.VALCEA"];
+
+// Columns = the stations tickets are actually sold to
+const COLS = ["BUCIUMENI","DRAGOESTI","OLANU","TEIU","FACULTATIVA","GALICEA","SLAVITESTI","BABENI","CCH","BADCOM","VL"];
+
+// Best-effort reading of the photographed table. NULL = dash / not sold. VERIFY before real use.
+const DATA = {
+ "BUCIUMENI":        [null,5,8,9,11,12,14,15,18,19,20],
+ "SPIRIDON":         [5,null,8,9,11,12,14,15,18,19,20],
+ "DRAGOESTI":        [5,null,7,8,9,8,12,13,16,17,18],
+ "TUFANI":           [7,5,null,8,9,12,12,13,16,17,18],
+ "CIOBOTI":          [8,7,5,null,7,8,12,13,16,17,18],
+ "OLANU":            [8,8,null,6,7,null,12,13,16,16,18],
+ "DRAGIOIU":         [8,8,5,6,7,8,12,13,16,17,18],
+ "TEIU":             [9,9,6,null,5,6,9,13,15,16,17],
+ "FACULTATIVA":      [11,11,7,5,null,4,8,12,14,15,16],
+ "GALICEA":          [12,12,8,5,4,null,6,9,13,14,15],
+ "SLAVITESTI":       [14,14,9,9,8,6,null,5,8,10,10],
+ "BABENI":           [15,15,12,13,12,9,5,null,8,9,9],
+ "TATARANI":         [16,16,13,14,13,11,5,5,7,8,9],
+ "MIHAESTI":         [16,16,14,14,13,11,7,6,7,8,9],
+ "SPALATORIE PETROL":[17,17,15,15,14,12,7,6,5,6,7],
+ "GOVORA G.":        [18,18,16,15,14,13,8,7,4,6,7],
+ "CCH/CONSERVIL":    [18,18,16,15,14,13,9,9,null,5,6],
+ "BADCOM":           [19,19,17,16,15,14,10,10,5,null,6],
+ "ROVIMET":          [20,20,18,17,16,15,11,11,6,6,5],
+ "RM.VALCEA":        [20,20,18,17,16,15,11,11,6,6,null],
+};
+
+const ALL_STATIONS = [...new Set([...ROWS, ...COLS])];
+
+function norm(s){
+  return s.toLowerCase()
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'')
+    .replace(/[^a-z0-9 /]/g,'').trim();
+}
+
+function priceFor(fromName, toName){
+  // direct lookup: fromName is a row, toName is a column
+  if(ROWS.includes(fromName) && COLS.includes(toName)){
+    const v = DATA[fromName][COLS.indexOf(toName)];
+    if(v !== null) return v;
+  }
+  // reversed: toName is a row, fromName is a column (route sold both directions at same price)
+  if(ROWS.includes(toName) && COLS.includes(fromName)){
+    const v = DATA[toName][COLS.indexOf(fromName)];
+    if(v !== null) return v;
+  }
+  return undefined;
+}
+
+function populateSelects(){
+  const fromSel = document.getElementById('from');
+  const toSel = document.getElementById('to');
+  ROWS.forEach(s=>{
+    const o = document.createElement('option'); o.value=s; o.textContent = titleCase(s);
+    fromSel.appendChild(o);
+  });
+  COLS.forEach(s=>{
+    const o = document.createElement('option'); o.value=s; o.textContent = titleCase(s);
+    toSel.appendChild(o);
+  });
+  toSel.selectedIndex = COLS.length-1; // default to final stop
+  fromSel.addEventListener('change', showResult);
+  toSel.addEventListener('change', showResult);
+}
+
+function titleCase(s){
+  return s.split(' ').map(w=> w.length<=3 && w===w.toUpperCase() && !['CCH','VL'].includes(w) ? w : (w.charAt(0)+w.slice(1).toLowerCase())).join(' ');
+}
+
+function showResult(spokenText){
+  const from = document.getElementById('from').value;
+  const to = document.getElementById('to').value;
+  const price = priceFor(from, to);
+  const box = document.getElementById('result');
+  if(price === undefined){
+    box.innerHTML = `<div class="msg err">Nu există tarif direct pentru ${titleCase(from)} → ${titleCase(to)}. Verifică la dispecerat.</div>`;
+    return;
+  }
+  box.innerHTML = `
+    <div class="price">${price} <small>lei</small></div>
+    <div class="result-route">${titleCase(from)} → ${titleCase(to)}</div>
+  `;
+}
+
+function buildEditTable(){
+  const table = document.getElementById('editTable');
+  let html = '<tr><th class="rowhead">Plecare \\ Sosire</th>' + COLS.map(c=>`<th>${titleCase(c)}</th>`).join('') + '</tr>';
+  ROWS.forEach(r=>{
+    html += `<tr><td class="rowhead">${titleCase(r)}</td>`;
+    COLS.forEach((c,i)=>{
+      const v = DATA[r][i];
+      html += `<td><input type="text" inputmode="numeric" data-row="${r}" data-col="${i}" value="${v===null?'':v}" placeholder="–"></td>`;
+    });
+    html += '</tr>';
+  });
+  table.innerHTML = html;
+  table.addEventListener('input', e=>{
+    const t = e.target;
+    if(t.tagName !== 'INPUT') return;
+    const r = t.dataset.row, i = +t.dataset.col;
+    const raw = t.value.trim();
+    DATA[r][i] = raw === '' || raw === '-' || raw === '–' ? null : parseFloat(raw.replace(',','.'));
+    showResult();
+  });
+}
+
+// --- Voice ---
+const voiceBtn = document.getElementById('voiceBtn');
+const heard = document.getElementById('heard');
+const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+function findStation(fragment, candidates){
+  const f = norm(fragment);
+  if(!f) return null;
+  let best=null, bestLen=0;
+  candidates.forEach(c=>{
+    const nc = norm(c);
+    if(f.includes(nc) && nc.length>bestLen){ best=c; bestLen=nc.length; }
+    else if(nc.includes(f) && f.length>2 && f.length>bestLen){ best=c; bestLen=f.length; }
+  });
+  return best;
+}
+
+function parseSpeech(text){
+  const t = norm(text);
+  const m = t.match(/de la (.+?) (?:pana la|până la|la|spre|catre|către) (.+)/);
+  let fromGuess, toGuess;
+  if(m){
+    fromGuess = m[1]; toGuess = m[2];
+  } else {
+    const parts = t.split(/ la | spre | catre | către /);
+    if(parts.length>=2){ fromGuess = parts[0]; toGuess = parts[parts.length-1]; }
+    else { toGuess = t; }
+  }
+  const from = fromGuess ? findStation(fromGuess, ROWS) : null;
+  const to = findStation(toGuess || t, COLS) || findStation(toGuess || t, ROWS);
+  return {from, to};
+}
+
+if(SpeechRec){
+  const rec = new SpeechRec();
+  rec.lang = 'ro-RO';
+  rec.interimResults = false;
+  rec.maxAlternatives = 1;
+
+  voiceBtn.addEventListener('click', ()=>{
+    try{ rec.start(); voiceBtn.classList.add('listening'); voiceBtn.textContent='🎙 ascult…'; }
+    catch(e){ /* already started */ }
+  });
+  rec.onresult = (e)=>{
+    const text = e.results[0][0].transcript;
+    heard.textContent = '„' + text + '”';
+    const {from, to} = parseSpeech(text);
+    if(from) document.getElementById('from').value = from;
+    if(to) document.getElementById('to').value = to;
+    if(from || to) showResult();
+    else {
+      document.getElementById('result').innerHTML = `<div class="msg err">N-am recunoscut stațiile. Încearcă „de la [stație] la [stație]”.</div>`;
+    }
+  };
+  rec.onerror = ()=>{
+    document.getElementById('result').innerHTML = `<div class="msg err">Nu am putut folosi microfonul. Alege stațiile manual.</div>`;
+  };
+  rec.onend = ()=>{ voiceBtn.classList.remove('listening'); voiceBtn.textContent='🎙 spune stațiile'; };
+} else {
+  voiceBtn.disabled = true;
+  voiceBtn.textContent = 'Comanda vocală nu e disponibilă în acest browser';
+}
+
+populateSelects();
+buildEditTable();
+showResult();
+
+// Native install prompt, when Chrome offers it
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e)=>{
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('installBtn').style.display = 'flex';
+});
+document.getElementById('installBtn').addEventListener('click', async ()=>{
+  if(!deferredPrompt) return;
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+  document.getElementById('installBtn').style.display = 'none';
+});
+window.addEventListener('appinstalled', ()=>{
+  document.getElementById('installBox').open = false;
+});
+</script>
+</body>
+</html>

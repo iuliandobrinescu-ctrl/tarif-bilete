@@ -1,0 +1,41 @@
+{
+  "background_color": "#1a2230",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "Tarif Bilete Buciumeni-Rm. Valcea",
+  "orientation": "any",
+  "scope": ".",
+  "short_name": "Tarif Bilete",
+  "start_url": ".",
+  "theme_color": "#1a2230",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "id": "Buss",
+  "description": "Calculator tarife bilete pentru cursa Buciumeni - Rm. Valcea, cu cautare vocala",
+  "lang": "ro",
+  "categories": ["transportation"]
+}
